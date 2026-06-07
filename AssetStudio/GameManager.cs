@@ -76,6 +76,7 @@ namespace AssetStudio
             Games.Add(index++, new TCTUtils.TFTCN(GameType.TFTCN, TCTCN_SM4Key, TCTCN_SM4IV, TCTCN_ZUCKey, TCTCN_ZUCIV, TCTCN_ChaCha20Constants, TCTCN_ChaCha20Key, TCTCN_ChaCha20IV, TCTCN_HC128Key, TCTCN_HC128IV));
             Games.Add(index++, new TCTUtils.WildRift(GameType.WildRift, WildRift_SM4Key, WildRift_SM4IV, WildRift_ZUCKey, WildRift_ZUCIV, WildRift_ChaCha20Constants, WildRift_ChaCha20Key, WildRift_ChaCha20IV, WildRift_HC128Key, WildRift_HC128IV));
             Games.Add(index++, new Game(GameType.HOTD));
+            Games.Add(index++, new Game(GameType.ROTWGW));
         }
 
 
@@ -232,7 +233,8 @@ namespace AssetStudio
         TsubasaACE,
         TFTCN,
         WildRift,
-        HOTD
+        HOTD,
+        ROTWGW
     }
 
     public static class GameTypes

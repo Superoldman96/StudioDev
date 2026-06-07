@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using System.Text;
 using static AssetStudio.BundleFile;
 using static AssetStudio.Crypto;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AssetStudio
 {
@@ -1902,5 +1903,36 @@ namespace AssetStudio
 
 
         }
+        public static FileReader DecryptROTWGW(FileReader reader)
+        {
+            var enc = reader.ReadStringToNull();
+
+            if (enc != "Odin")
+            {
+                reader.Position = 0;
+                return reader;
+            }
+
+            reader.Position = 9;
+            var m_Header = new BundleFile.Header
+            {
+                version = 8,
+                signature = "UnityFS",
+                unityVersion = "5.x.x",
+                unityRevision = "2022.3.62f2",
+                size = reader.ReadInt64(),
+                compressedBlocksInfoSize = reader.ReadUInt32(),
+                uncompressedBlocksInfoSize = reader.ReadUInt32(),
+                flags = (ArchiveFlags)reader.ReadInt32()
+            };
+            MemoryStream ms = new();
+            m_Header.WriteToStream(ms);
+            reader.AlignStream();
+            var data = reader.ReadBytes((int)reader.Remaining);
+            ms.Write(data);
+            ms.Position = 0;
+            return new FileReader(reader.FullPath, ms);
+        }
     }
+
 }

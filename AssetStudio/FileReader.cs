@@ -320,6 +320,9 @@ namespace AssetStudio
                     case GameType.HOTD:
                         reader = DecryptInfinityKingdom(reader);
                         break;
+                    case GameType.ROTWGW:
+                        reader = DecryptROTWGW(reader);
+                        break;
 
                 }
             }
@@ -352,5 +355,6 @@ namespace AssetStudio
             return reader;
         }
 
+   
     }
 }

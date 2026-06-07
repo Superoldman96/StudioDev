@@ -104,6 +104,33 @@ namespace AssetStudio
                 stream.Write(buffer[..4]);
                 BinaryPrimitives.WriteUInt32BigEndian(buffer, (uint)flags);
                 stream.Write(buffer[..4]);
+                if (version >= 7)
+                {
+                    long currentPos = stream.Position;
+                    long pad = (16 - (currentPos % 16)) % 16;
+                    if (pad > 0)
+                        stream.Write(new byte[pad]);
+                }
+            }
+            public void WriteToFileMS(Stream stream, uint Padding = 14)
+            {
+                Span<byte> buffer = stackalloc byte[8];
+                stream.Write(Encoding.UTF8.GetBytes(signature));
+                stream.WriteByte(0);
+                BinaryPrimitives.WriteUInt32LittleEndian(buffer, version);
+                stream.Write(buffer[..4]);
+                stream.Write(Encoding.UTF8.GetBytes(unityVersion));
+                stream.WriteByte(0);
+                stream.Write(Encoding.UTF8.GetBytes(unityRevision));
+                stream.WriteByte(0);
+                BinaryPrimitives.WriteInt64LittleEndian(buffer, size);
+                stream.Write(buffer);
+                BinaryPrimitives.WriteUInt32LittleEndian(buffer, compressedBlocksInfoSize);
+                stream.Write(buffer[..4]);
+                BinaryPrimitives.WriteUInt32LittleEndian(buffer, uncompressedBlocksInfoSize);
+                stream.Write(buffer[..4]);
+                BinaryPrimitives.WriteUInt32LittleEndian(buffer, (uint)flags);
+                stream.Write(buffer[..4]);
                 stream.Write(new byte[Padding]);
             }
         }
