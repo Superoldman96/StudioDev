@@ -72,8 +72,16 @@ namespace AssetStudio.GUI
             for (var i = 0; i < fileNames.Length; i++)
             {
                 var fileName = fileNames[i];
-                extractedCount += ExtractFile(fileName, savePath);
-                Progress.Report(i + 1, fileNames.Length);
+                Logger.Debug($"Extracting {fileName}");
+                try
+                {
+                    extractedCount += ExtractFile(fileName, savePath);
+                    Progress.Report(i + 1, fileNames.Length);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Error Extracting {fileName} , {ex.Message}\n{ex.StackTrace}");
+                }
             }
             return extractedCount;
         }
@@ -96,17 +104,26 @@ namespace AssetStudio.GUI
         {
             int extractedCount = 0;
             var reader = new FileReader(fileName);
-            reader = reader.PreProcessing(Game);
-            if (reader.FileType == FileType.BundleFile)
-                extractedCount += ExtractBundleFile(reader, savePath);
-            else if (reader.FileType == FileType.WebFile)
-                extractedCount += ExtractWebDataFile(reader, savePath);
-            else if (reader.FileType == FileType.BlkFile)
-                extractedCount += ExtractBlkFile(reader, savePath);
-            else if (reader.FileType == FileType.BlockFile)
-                extractedCount += ExtractBlockFile(reader, savePath);
-            else
-                reader.Dispose();
+            Logger.Debug($"Extracting {fileName}");
+            try
+            {
+
+                reader = reader.PreProcessing(Game);
+                if (reader.FileType == FileType.BundleFile)
+                    extractedCount += ExtractBundleFile(reader, savePath);
+                else if (reader.FileType == FileType.WebFile)
+                    extractedCount += ExtractWebDataFile(reader, savePath);
+                else if (reader.FileType == FileType.BlkFile)
+                    extractedCount += ExtractBlkFile(reader, savePath);
+                else if (reader.FileType == FileType.BlockFile)
+                    extractedCount += ExtractBlockFile(reader, savePath);
+                else
+                    reader.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Error Extracting {fileName} , {ex.Message}\n{ex.StackTrace}");
+            }
             return extractedCount;
         }
         public static int DecryptFile(string fileName, string savePath)

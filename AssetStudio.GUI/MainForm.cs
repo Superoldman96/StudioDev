@@ -2066,7 +2066,7 @@ RegexOptions.Compiled
           {
               try
               {
-                  var ids = dumpPathIDRegex.Matches(obj.Dump())
+                  var ids = dumpPathIDRegex.Matches(DumpAsset(obj) ?? "")
                       .Cast<Match>()
                       .Select(m => long.Parse(m.Groups[1].Value))
                       .ToList();
