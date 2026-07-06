@@ -866,8 +866,9 @@ FilterBlocksWithRemaining(List<StorageBlock> blocks, Node dirInfo)
             for (int i = 0; i < m_BlocksInfo.Count; i++)
             {
 
-                Logger.Verbose($"Reading block {i}...");
                 var blockInfo = m_BlocksInfo[i];
+                Logger.Verbose($"Reading block {i} at 0x{reader.Position:X8} size 0x{blockInfo.compressedSize:X8} => 0x{blockInfo.uncompressedSize:X8}...");
+
                 var compressionType = (CompressionType)(blockInfo.flags & StorageBlockFlags.CompressionTypeMask);
 
                 Logger.Verbose($"Block compression type {compressionType}");

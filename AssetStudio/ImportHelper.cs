@@ -825,7 +825,12 @@ namespace AssetStudio
             Logger.Verbose($"Attempting to decrypt file {reader.FileName} with Alice Gear Aegis encryption");
 
             var key = new byte[] { 0x1B, 0x59, 0x62, 0x33, 0x78, 0x76, 0x45, 0xB3, 0x5B, 0x48, 0x39, 0xD7, 0x9C, 0x21, 0x89, 0x94 };
-
+            uint _start = 0;
+            if (reader.ReadUInt32() == 0x43524333)
+            {
+                reader.Position = 32;
+                _start = 32;
+            }
             var header = new Header()
             {
                 signature = reader.ReadStringToNull(),
@@ -840,7 +845,7 @@ namespace AssetStudio
                 return reader;
             }
 
-            reader.Position = 8;
+            reader.Position = _start+0x8;
             var seed = (reader.Length - reader.Position) % key.Length;
 
             var encryptedBlock = reader.ReadBytes(0x80);
